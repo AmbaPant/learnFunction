@@ -1,0 +1,115 @@
+water TF 20.0 G, T  251.75654(   0.08232) K
+###############################################################
+FITPARAMETER
+#      Nr. Name        Value     Step      Pos_Error  Boundaries
+        1 alpha       1.0428    0.0011      none        0       2       
+        2 asyTF       0.1425    0.0011      none        0       0.33    
+        3 rateTF      0.0654    0.0031      none        0       5       
+        4 phaseTF     0.07      0.50        none        -360    360.33  
+        5 fieldTF     20.739    0.038       none        0       200     
+
+        6 asy_u       0.0926    0.0015      none        0       0.33    
+        7 rate_u      0.0106    0           none        0       5       
+        8 phase_u     -6.6      0           none        -360    360.33  
+        9 field_u     2.35      0           none        0       200     
+
+       10 asy_Mu      0.0320    0.0019      none        0       0.33    
+       11 rate_Mu     2.42      0.17        none        0       5       
+       12 phase_Mu    21.9      3.8         none        -360    360.33  
+       13 field_Mu    2.302     0.029       none        0       200     
+
+       14 asy_BG      0.00251   0.00098     none        0       0.33    
+       15 rate_BG     0         0           none        0       10      
+
+       16 zero        0         0           none        0       5       
+
+#       17 asy_uadd    0.0759    0.0014      none        0       0.33    
+#       18 rate_uadd   0.421     0.018       none        0       5       
+
+       17 asy_usrfun2 0.0478    0.0011      none        0       2       
+       18 lambda_usrfun2 0.128     0.024       none        0       10      
+       19 phase_usrfun2 -8.5      4.4         none        -360    360.33  
+       20 freq_usrfun2 0.1104    0.0028      none        0       200     
+
+###############################################################
+THEORY
+asymmetry   map1
+simplExpo   map2          (rate)
+TFieldCos   map3  fun1       (phase frequency)
++
+asymmetry   map5
+simplExpo   map6          (rate)
+TFieldCos   map7  fun2       (phase frequency)
++
+asymmetry   map9
+simplExpo  map10          (rate)
+TFieldCos  map11  fun3       (phase frequency)
++
+asymmetry  map13
+simplExpo  map14          (rate)
+#+
+#asymmetry  map15
+#simplExpo  map16          (rate)
+#TFieldCos   map7  fun2       (phase frequency)
++
+asymmetry  map15
+simplExpo  map16          (rate)
+userFcn  libMH_Funcs.so Spin2System map17 map18 (phase frequency)
+
+###############################################################
+FUNCTIONS
+fun1 = map4 * gamma_mu
+fun2 = map8 * gamma_mu
+fun3 = 102.88572 * map12 * gamma_mu
+
+##TK#############################################################
+RUN /home/adpant/shared_adpData/BT_PAz/Feb2020MLF/data/122614 J-PARC PSI PSI-BIN   (name beamline institute data-file-format)
+fittype         2         (asymmetry fit)
+alpha           1
+map             2    3    4    5   16    7    8    9   16   11   12   13   16   15   16   18   19   20
+forward         1 
+backward        2 
+background      61      584     57      545        # estimated bkg: 0.0019 / 0.0000
+data            996     5000    996     5000    
+t0              986.0   986.0   
+fit             0       15     
+packing         1
+
+RUN /home/adpant/shared_adpData/BT_PAz/Feb2020MLF/data/122616 J-PARC PSI PSI-BIN   (name beamline institute data-file-format)
+fittype         2         (asymmetry fit)
+alpha           1
+map            16    3    4    5    6    7    8    9   10   11   12   13   14   15   17   18   19   20
+forward         1 
+backward        2 
+background      61      584     57      545        # estimated bkg: 0.0038 / 0.0021
+data            992     5000    992     5000    
+t0              986.0   986.0   
+fit             0       15     
+packing         1
+
+###############################################################
+COMMANDS
+MINIMIZE
+#MINOS
+HESSE
+SAVE
+
+###############################################################
+FOURIER
+units            Gauss   # units either 'Gauss', 'Tesla', 'MHz', or 'Mc/s'
+fourier_power    12
+apodization      STRONG  # NONE, WEAK, MEDIUM, STRONG
+plot             POWER   # REAL, IMAG, REAL_AND_IMAG, POWER, PHASE, PHASE_OPT_REAL
+phase            par3
+#range_for_phase_correction 50.0 70.0
+range            0    100
+
+###############################################################
+PLOT 2   (asymmetry plot)
+runs     2   
+range    0   20
+view_packing 25
+
+###############################################################
+STATISTIC --- 2020-03-04 17:16:32
+  chisq = 4051.9, NDF = 3719, chisq/NDF = 1.089503
